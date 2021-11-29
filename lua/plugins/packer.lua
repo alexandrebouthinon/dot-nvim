@@ -1,19 +1,9 @@
 -----------------------------------------------------------
--- Packer autoinstallation
------------------------------------------------------------
-local fn = vim.fn
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-  packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-end
-
-vim.cmd [[packadd packer.nvim]]
-
------------------------------------------------------------
 -- Plugins declaration
 -----------------------------------------------------------
 return require('packer').startup(function(use)
   use 'srcery-colors/srcery-vim'
+  use 'wbthomason/packer.nvim'
 
   use 'glepnir/dashboard-nvim'
   use 'kyazdani42/nvim-web-devicons'
@@ -21,6 +11,8 @@ return require('packer').startup(function(use)
   use 'numToStr/FTerm.nvim'
   use 'nvim-lua/plenary.nvim'
   use 'nvim-telescope/telescope.nvim'
+  use 'kyazdani42/nvim-tree.lua'
+  use 'romgrk/barbar.nvim'
 
   use 'f-person/git-blame.nvim'
   use 'kdheepak/lazygit.nvim'
@@ -39,9 +31,5 @@ return require('packer').startup(function(use)
   use 'neovim/nvim-lspconfig'
   use 'williamboman/nvim-lsp-installer'
 
-  -- To run sync command automatically
-  if packer_bootstrap then
-    require('packer').sync()
-  end
 end)
 

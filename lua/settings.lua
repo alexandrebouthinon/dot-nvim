@@ -25,6 +25,6 @@ vim.opt.updatetime      = 100
 -----------------------------------------------------------
 -- Colors
 -----------------------------------------------------------
-vim.g.termguicolors=true
+vim.opt.termguicolors=true
 vim.cmd('colorscheme srcery')
 
