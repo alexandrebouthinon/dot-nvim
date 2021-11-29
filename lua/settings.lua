@@ -19,11 +19,12 @@ vim.opt.cursorline      = true                        -- highlight current curso
 vim.opt.ttyfast         = true                        -- Speed up scrolling in Vim
 vim.opt.splitright      = true                        -- split windows vertically to the right
 vim.opt.splitbelow      = true                        -- split windows horizontally below
+vim.g.mapleader         = ' '                         -- leader key mapping
 vim.opt.updatetime      = 100
-vim.g.mapleader         = ' '
 
 -----------------------------------------------------------
 -- Colors
 -----------------------------------------------------------
 vim.g.termguicolors=true
 vim.cmd('colorscheme srcery')
+
