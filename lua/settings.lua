@@ -1,12 +1,13 @@
+local vim = vim;
 -----------------------------------------------------------
 -- Editor
 -----------------------------------------------------------
-vim.opt.showmatch       = true                        -- show matching 
-vim.opt.ignorecase      = true                        -- case insensitive 
-vim.opt.mouse           = 'v'                         -- middle-click paste with 
-vim.opt.hlsearch        = true                        -- highlight search 
+vim.opt.showmatch       = true                        -- show matching
+vim.opt.ignorecase      = true                        -- case insensitive
+vim.opt.mouse           = 'v'                         -- middle-click paste with
+vim.opt.hlsearch        = true                        -- highlight search
 vim.opt.incsearch       = true                        -- incremental search
-vim.opt.tabstop         = 2                           -- number of columns occupied by a tab 
+vim.opt.tabstop         = 2                           -- number of columns occupied by a tab
 vim.opt.softtabstop     = 2                           -- see multiple spaces as tabstops so <BS> does the right thing
 vim.opt.expandtab       = true                        -- converts tabs to white space
 vim.opt.shiftwidth      = 2                           -- width for autoindents
@@ -26,5 +27,5 @@ vim.opt.updatetime      = 100
 -- Colors
 -----------------------------------------------------------
 vim.opt.termguicolors=true
-vim.cmd('colorscheme srcery')
+vim.cmd('colorscheme galaxian')
 

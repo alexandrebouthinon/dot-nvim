@@ -15,12 +15,13 @@ map('n', '<A-l>', '<C-w>l', opts)
 -----------------------------------------------------------
 -- Functions
 ----------------------------------------------------------
-map('n', '<Leader>gg',      ':LazyGit<CR>',              	             opts)
-map('n', '<Leader>ff',      ':Telescope find_files<CR>', 	             opts)
-map('n', '<Leader>b.',      ':bnext<CR>',   	             opts)
-map('n', '<Leader>b,',      ':bprev<CR>',   	             opts)
-map('n', '<Leader>tt', 	    ':lua require("FTerm").toggle()<CR>',      opts)
-map('n', '<C-t>', 	        ':NvimTreeToggle<CR>',                     opts)
+map('n', '<Leader>gg',      ':LazyGit<CR>',              	        opts)
+map('n', '<Leader>ff',      ':Telescope find_files<CR>', 	        opts)
+map('n', '<Leader>b.',      ':bnext<CR>',   	                    opts)
+map('n', '<Leader>b,',      ':bprev<CR>',   	                    opts)
+map('n', '<Leader>tt', 	    ':lua require("FTerm").toggle()<CR>', opts)
+map('n', '<C-t>', 	        ':NvimTreeToggle<CR>',                opts)
+map('n', '<Leader>p', 	    ':Glow<CR>',                          opts)
 
 
 

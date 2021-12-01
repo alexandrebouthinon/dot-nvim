@@ -13,15 +13,7 @@
 -----------------------------------------------------------
 -- Import NVIM configuration
 -----------------------------------------------------------
+require('plugins')
 require('settings')
 require('keybindings')
-
------------------------------------------------------------
--- Import Plugins and their configurations
------------------------------------------------------------
-require('plugins/packer')
-require('plugins/dashboard')
-require('plugins/cmp')
-require('plugins/lsp-installer')
-require('plugins/nvim-tree')
 
