@@ -229,52 +229,30 @@ return require('packer').startup(function(use)
     end
   }
 
-  -- Formatter
-  use {
-    'mhartington/formatter.nvim',
-    config = function()
-      filetype = {
-        lua = {
-        function()
-          return {
-            exe = "luafmt",
-            args = {"--indent-count", 2, "--stdin"},
-            stdin = true
-          }
-        end
-        },
-        javascript = {
-          function()
-            return {
-              exe = "prettier",
-              args = {"--stdin-filepath", vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)), '--single-quote'},
-              stdin = true
-            }
-          end
-        },
-        rust = {
-          function()
-            return {
-              exe = "rustfmt",
-              args = {"--emit=stdout"},
-              stdin = true
-            }
-          end
-        },
-        terraform = {
-          function()
-            return {
-              exe = "terraform",
-              args = { "fmt", "-" },
-              stdin = true
-            }
-          end
-        },
-      }   
-    end
-  }
-
   -- Auto-completion
   use 'github/copilot.vim'
+
+  -- LSP support
+  use 'neovim/nvim-lspconfig'
+
+  use {
+    'williamboman/nvim-lsp-installer',
+    config = function()
+      require('nvim-lsp-installer').settings({
+        ui = {
+          icons = {
+            server_installed = "✓",
+            server_pending = "➜",
+            server_uninstalled = "✗"
+          }
+        }
+      })
+
+      require('nvim-lsp-installer').on_server_ready(function(server)
+        local opts = {}
+        server:setup(opts)
+      end)
+    end
+  }
 end)
 
