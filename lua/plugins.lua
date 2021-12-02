@@ -3,11 +3,141 @@
 -----------------------------------------------------------
 return require('packer').startup(function(use)
   -- Packer self management
-  use 'wbthomason/packer.nvim'
+  use {
+    'wbthomason/packer.nvim',
+    config = function()
+      -- Recompile Packer when this file is updated
+      vim.cmd([[
+        augroup packer_user_config
+          autocmd!
+          autocmd BufWritePost plugins.lua source <afile> | PackerCompile
+        augroup end
+      ]])
+    end
+  }
 
-  -- Colorscheme and other styling stuff
-  use 'evprkr/galaxian-vim'
-  use 'kyazdani42/nvim-web-devicons'
+  -- Programming languages support
+  use 'hashivim/vim-terraform'
+
+  -- Colorscheme
+  use 'folke/tokyonight.nvim'
+
+  -- Tabline
+  use {
+    'romgrk/barbar.nvim',
+    requires = {'kyazdani42/nvim-web-devicons'}
+  }
+
+  -- Tree sitter
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate'
+  }
+
+  -- Status line
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = {'kyazdani42/nvim-web-devicons', opt = true},
+    config = function()
+      require'lualine'.setup {
+        options = {
+          icons_enabled = true,
+          theme = 'tokyonight',
+          component_separators = { left = '', right = ''},
+          section_separators = { left = '', right = ''},
+          disabled_filetypes = {},
+          always_divide_middle = true,
+        },
+        sections = {
+          lualine_a = {'mode'},
+          lualine_b = {'branch', 'diff',
+                        {'diagnostics', sources={'nvim_lsp', 'coc'}}},
+          lualine_c = {'filename'},
+          lualine_x = {'encoding', 'fileformat', 'filetype'},
+          lualine_y = {'progress'},
+          lualine_z = {'location'}
+        },
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = {'filename'},
+          lualine_x = {'location'},
+          lualine_y = {},
+          lualine_z = {}
+        },
+        tabline = {},
+        extensions = {}
+      }
+    end
+  }
+
+  -- File tree
+  use {
+    'kyazdani42/nvim-tree.lua',
+    requires = {
+      'kyazdani42/nvim-web-devicons',
+    },
+    config = function()
+      require'nvim-tree'.setup {
+        disable_netrw       = true,
+        hijack_netrw        = true,
+        open_on_setup       = true,
+        ignore_ft_on_setup  = {},
+        auto_close          = true,
+        open_on_tab         = false,
+        hijack_cursor       = false,
+        update_cwd          = false,
+        update_to_buf_dir   = {
+          enable = true,
+          auto_open = true,
+        },
+        diagnostics = {
+          enable = false,
+          icons = {
+            hint = "?",
+            info = "?",
+            warning = "?",
+            error = "?",
+          }
+        },
+        update_focused_file = {
+          enable      = false,
+          update_cwd  = false,
+          ignore_list = {}
+        },
+        system_open = {
+          cmd  = nil,
+          args = {}
+        },
+        filters = {
+          dotfiles = false,
+          custom = {}
+        },
+        git = {
+          enable = true,
+          ignore = true,
+          timeout = 500,
+        },
+        view = {
+          width = 30,
+          height = 30,
+          hide_root_folder = false,
+          side = 'left',
+          auto_resize = false,
+          mappings = {
+            custom_only = false,
+            list = {}
+          },
+          number = false,
+          relativenumber = false
+        },
+        trash = {
+          cmd = "trash",
+          require_confirm = true
+        }
+      }
+    end
+  }
 
   -- Dashboard Home page
   use {
@@ -29,6 +159,7 @@ return require('packer').startup(function(use)
   use {
     'lewis6991/gitsigns.nvim',
     requires = 'nvim-lua/plenary.nvim',
+    tag = 'release',
     config = function()
       require('gitsigns').setup {
         signs = {
@@ -95,6 +226,51 @@ return require('packer').startup(function(use)
           enable = false
         },
       }
+    end
+  }
+
+  -- Formatter
+  use {
+    'mhartington/formatter.nvim',
+    config = function()
+      filetype = {
+        lua = {
+        function()
+          return {
+            exe = "luafmt",
+            args = {"--indent-count", 2, "--stdin"},
+            stdin = true
+          }
+        end
+        },
+        javascript = {
+          function()
+            return {
+              exe = "prettier",
+              args = {"--stdin-filepath", vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)), '--single-quote'},
+              stdin = true
+            }
+          end
+        },
+        rust = {
+          function()
+            return {
+              exe = "rustfmt",
+              args = {"--emit=stdout"},
+              stdin = true
+            }
+          end
+        },
+        terraform = {
+          function()
+            return {
+              exe = "terraform",
+              args = { "fmt", "-" },
+              stdin = true
+            }
+          end
+        },
+      }   
     end
   }
 

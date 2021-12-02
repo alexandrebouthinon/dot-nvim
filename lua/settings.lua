@@ -1,4 +1,3 @@
-local vim = vim;
 -----------------------------------------------------------
 -- Editor
 -----------------------------------------------------------
@@ -27,5 +26,5 @@ vim.opt.updatetime      = 100
 -- Colors
 -----------------------------------------------------------
 vim.opt.termguicolors=true
-vim.cmd('colorscheme galaxian')
-
+vim.g.tokyonight_style = "night"
+vim.cmd('colorscheme tokyonight')
