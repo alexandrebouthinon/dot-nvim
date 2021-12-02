@@ -20,13 +20,74 @@ return require('packer').startup(function(use)
   use 'hashivim/vim-terraform'
 
   -- Colorscheme
-  use 'folke/tokyonight.nvim'
-
-  -- Tabline
   use {
-    'romgrk/barbar.nvim',
-    requires = {'kyazdani42/nvim-web-devicons'}
+    'folke/tokyonight.nvim',
+    config = function()
+      vim.g.tokyonight_style = 'night'
+      vim.g.tokyonight_italic_functions = true
+      vim.g.tokyonight_sidebars = { "terminal", "packer" }
+      vim.cmd[[colorscheme tokyonight]]
+    end
   }
+
+  -- Comments
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
+        require('Comment').setup()
+    end
+  }
+
+  -- Bufferline
+  use {
+    'akinsho/bufferline.nvim',
+    requires = 'kyazdani42/nvim-web-devicons',
+    config = function()
+      require("bufferline").setup({
+        options = {
+          numbers = function(opts)
+            return string.format("%s", opts.raise(opts.ordinal))
+          end,
+          right_mouse_command = nil,
+          styling = 'slant',
+          diagnostics = "nvim_lsp",
+          diagnostics_indicator = function(count, level, _)
+            local icon = level:match("error") and " " or " "
+            return " " .. icon .. count
+          end,
+          highlights = {
+            title = {
+              guifb = '#d69020',
+              guibg = '#1a1b26',
+              gui = 'bold',
+            },
+          },
+          offsets = {
+            { filetype = "NvimTree", text = "File Explorer", highlight = "title", text_align = "center" },
+            { filetype = "trouble", text = "Problems", text_align = "left"},
+          },
+        },
+      })
+    end
+  }
+
+  -- Terminal
+  use {
+    'akinsho/toggleterm.nvim',
+    config = function()
+      require("toggleterm").setup({
+        open_mapping = nil,
+        persist_size = true,
+        direction = "float",
+        float_opts = {
+          border = "curved",
+        },
+      })
+    end
+  }
+
+  -- Markdown Preview
+  use 'ellisonleao/glow.nvim'
 
   -- Tree sitter
   use {
@@ -43,30 +104,48 @@ return require('packer').startup(function(use)
         options = {
           icons_enabled = true,
           theme = 'tokyonight',
-          component_separators = { left = '', right = ''},
-          section_separators = { left = '', right = ''},
+          component_separators = '|',
+          section_separators = { left = '', right = '' },
           disabled_filetypes = {},
           always_divide_middle = true,
         },
         sections = {
           lualine_a = {'mode'},
-          lualine_b = {'branch', 'diff',
-                        {'diagnostics', sources={'nvim_lsp', 'coc'}}},
-          lualine_c = {'filename'},
+          lualine_b = {
+            'branch',
+          },
+          lualine_c = {
+            'filename',
+            'diff',
+            {
+              'diagnostics',
+              sources={'nvim_lsp', 'coc'},
+            }
+          },
           lualine_x = {'encoding', 'fileformat', 'filetype'},
           lualine_y = {'progress'},
           lualine_z = {'location'}
         },
-        inactive_sections = {
-          lualine_a = {},
-          lualine_b = {},
-          lualine_c = {'filename'},
-          lualine_x = {'location'},
-          lualine_y = {},
-          lualine_z = {}
-        },
         tabline = {},
-        extensions = {}
+        extensions = {
+          'nvim-tree',
+          'toggleterm',
+        }
+      }
+    end
+  }
+
+  -- Indentation
+  use {
+    'lukas-reineke/indent-blankline.nvim',
+    config = function()
+      require("indent_blankline").setup {
+        space_char_blankline = " ",
+        show_current_context = true,
+        show_current_context_start = true,
+        show_end_of_line = false,
+        buftype_exclude = { 'terminal', 'nofile'},
+        filetype_exclude = { 'help', 'packer' }
       }
     end
   }
@@ -79,25 +158,26 @@ return require('packer').startup(function(use)
     },
     config = function()
       require'nvim-tree'.setup {
+        auto_open           = true,
         disable_netrw       = true,
         hijack_netrw        = true,
         open_on_setup       = true,
         ignore_ft_on_setup  = {},
-        auto_close          = true,
+        auto_close          = false,
         open_on_tab         = false,
         hijack_cursor       = false,
         update_cwd          = false,
         update_to_buf_dir   = {
           enable = true,
-          auto_open = true,
+          auto_open = false,
         },
         diagnostics = {
-          enable = false,
+          enable = true,
           icons = {
-            hint = "?",
-            info = "?",
-            warning = "?",
-            error = "?",
+            hint = "",
+            info = "",
+            warning = "",
+            error = "",
           }
         },
         update_focused_file = {
@@ -123,7 +203,7 @@ return require('packer').startup(function(use)
           height = 30,
           hide_root_folder = false,
           side = 'left',
-          auto_resize = false,
+          auto_resize = true,
           mappings = {
             custom_only = false,
             list = {}
@@ -154,7 +234,6 @@ return require('packer').startup(function(use)
   }
 
   -- Git integrations
-  use 'f-person/git-blame.nvim'
   use 'kdheepak/lazygit.nvim'
   use {
     'lewis6991/gitsigns.nvim',
@@ -170,7 +249,7 @@ return require('packer').startup(function(use)
           changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
         },
         signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
-        numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+        numhl      = true, -- Toggle with `:Gitsigns toggle_numhl`
         linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
         word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
         keymaps = {
@@ -200,11 +279,11 @@ return require('packer').startup(function(use)
           follow_files = true
         },
         attach_to_untracked = true,
-        current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+        current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
         current_line_blame_opts = {
           virt_text = true,
-          virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
-          delay = 1000,
+          virt_text_pos = 'right_align', -- 'eol' | 'overlay' | 'right_align'
+          delay = 600,
           ignore_whitespace = false,
         },
         current_line_blame_formatter_opts = {
@@ -232,6 +311,14 @@ return require('packer').startup(function(use)
   -- Auto-completion
   use 'github/copilot.vim'
 
+  -- Github
+  use {
+    'pwntester/octo.nvim',
+    config=function()
+      require"octo".setup()
+    end
+  }
+
   -- LSP support
   use {
     'neovim/nvim-lspconfig',
@@ -242,6 +329,26 @@ return require('packer').startup(function(use)
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
       end
+    end
+  }
+
+  use {
+    "folke/lsp-trouble.nvim",
+    requires = "kyazdani42/nvim-web-devicons",
+    config = function()
+      require("trouble").setup({
+        auto_open = true,
+        auto_close = true,
+        auto_preview = false,
+        auto_fold = true,
+        signs = {
+          error = "",
+          warning = "",
+          hint = "",
+          information = "",
+          other = "﫠",
+        },
+      })
     end
   }
 
