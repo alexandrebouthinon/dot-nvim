@@ -25,6 +25,6 @@ vim.opt.updatetime      = 100
 -----------------------------------------------------------
 -- Colors
 -----------------------------------------------------------
-vim.opt.termguicolors=true
-vim.g.tokyonight_style = "night"
+vim.opt.termguicolors  = true
+vim.g.tokyonight_style = 'night'
 vim.cmd('colorscheme tokyonight')

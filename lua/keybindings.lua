@@ -25,3 +25,9 @@ map('n', '<Leader>ff', ':Telescope find_files<CR>', opts)
 map('n', '<Leader>ft', ':NvimTreeToggle<CR>',       opts)
 map('n', '<Leader>bf', ':Format<CR>',               opts)
 
+-----------------------------------------------------------
+-- Packer
+----------------------------------------------------------
+map('n', '<Leader>Pi', ':PackerInstall<CR>', opts)
+map('n', '<Leader>Pc', ':PackerClean<CR>',   opts)
+map('n', '<Leader>Pu', ':PackerSync<CR>',    opts)
