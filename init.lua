@@ -17,3 +17,13 @@ require('plugins')
 require('settings')
 require('keybindings')
 
+vim.cmd([[
+  augroup launch_dev_ui_items
+    autocmd!
+    autocmd VimEnter * LspTroubleOpen
+    autocmd VimEnter * NvimTreeOpen
+    autocmd VimEnter * wincmd w
+  augroup end
+]])
+
+

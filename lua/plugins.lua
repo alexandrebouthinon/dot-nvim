@@ -87,7 +87,10 @@ return require('packer').startup(function(use)
   }
 
   -- Markdown Preview
-  use 'ellisonleao/glow.nvim'
+  use {
+    'ellisonleao/glow.nvim',
+    ft = { 'markdown' },
+  }
 
   -- Tree sitter
   use {
@@ -135,6 +138,43 @@ return require('packer').startup(function(use)
     end
   }
 
+  -- Notifications
+  use {
+    'rcarriga/nvim-notify',
+    config = function()
+      require("notify").setup({
+        -- Animation style (see below for details)
+        stages = "fade",
+
+        -- Function called when a new window is opened, use for changing win settings/config
+        on_open = nil,
+
+        -- Render function for notifications. See notify-render()
+        render = "default",
+
+        -- Default timeout for notifications
+        timeout = 500,
+
+        -- For stages that change opacity this is treated as the highlight behind the window
+        -- Set this to either a highlight group or an RGB hex value e.g. "#000000"
+        background_colour = "Normal",
+
+        -- Minimum width for notification windows
+        minimum_width = 50,
+
+        -- Icons for the different levels
+        icons = {
+          ERROR = "",
+          WARN = "",
+          INFO = "",
+          DEBUG = "",
+          TRACE = "✎",
+        },
+      })
+      vim.notify = require('notify')
+    end
+  }
+
   -- Indentation
   use {
     'lukas-reineke/indent-blankline.nvim',
@@ -158,15 +198,15 @@ return require('packer').startup(function(use)
     },
     config = function()
       require'nvim-tree'.setup {
-        auto_open           = true,
+        auto_open           = false,
         disable_netrw       = true,
         hijack_netrw        = true,
         open_on_setup       = true,
         ignore_ft_on_setup  = {},
-        auto_close          = false,
-        open_on_tab         = false,
+        auto_close          = true,
+        open_on_tab         = true,
         hijack_cursor       = false,
-        update_cwd          = false,
+        update_cwd          = true,
         update_to_buf_dir   = {
           enable = true,
           auto_open = false,
@@ -201,9 +241,9 @@ return require('packer').startup(function(use)
         view = {
           width = 30,
           height = 30,
-          hide_root_folder = false,
+          hide_root_folder = true,
           side = 'left',
-          auto_resize = true,
+          auto_resize = false,
           mappings = {
             custom_only = false,
             list = {}
@@ -214,6 +254,80 @@ return require('packer').startup(function(use)
         trash = {
           cmd = "trash",
           require_confirm = true
+        }
+      }
+      vim.g.nvim_tree_window_picker_exclude = {
+        filetype = {
+          "notify",
+        }
+      }
+    end
+  }
+
+  -- Auto cleanup
+  use {
+    'McAuleyPenney/tidy.nvim',
+    event = 'BufWritePre' 
+  }
+
+  -- Docker
+  use 'kkvh/vim-docker-tools'
+
+
+  -- Ouline
+  use {
+    'simrat39/symbols-outline.nvim',
+    disable = true,
+    config = function()
+      vim.g.symbols_outline = {
+        highlight_hovered_item = true,
+        show_guides = false,
+        auto_preview = false,
+        position = 'right',
+        relative_width = false,
+        width = 35,
+        show_numbers = false,
+        show_relative_numbers = false,
+        show_symbol_details = false,
+        preview_bg_highlight = 'Directory',
+        keymaps = { -- These keymaps can be a string or a table for multiple keys
+            close = {"<Esc>", "q"},
+            goto_location = "<Cr>",
+            focus_location = "o",
+            hover_symbol = "<C-space>",
+            toggle_preview = "K",
+            rename_symbol = "r",
+            code_actions = "a",
+        },
+        lsp_blacklist = {},
+        symbol_blacklist = {},
+        symbols = {
+            File = {icon = "", hl = "TSURI"},
+            Module = {icon = "", hl = "TSNamespace"},
+            Namespace = {icon = "", hl = "TSNamespace"},
+            Package = {icon = "", hl = "TSNamespace"},
+            Class = {icon = "𝓒", hl = "TSType"},
+            Method = {icon = "ƒ", hl = "TSMethod"},
+            Property = {icon = "", hl = "TSMethod"},
+            Field = {icon = "", hl = "TSField"},
+            Constructor = {icon = "", hl = "TSConstructor"},
+            Enum = {icon = "ℰ", hl = "TSType"},
+            Interface = {icon = "ﰮ", hl = "TSType"},
+            Function = {icon = "", hl = "TSFunction"},
+            Variable = {icon = "", hl = "TSConstant"},
+            Constant = {icon = "", hl = "TSConstant"},
+            String = {icon = "𝓐", hl = "TSString"},
+            Number = {icon = "#", hl = "TSNumber"},
+            Boolean = {icon = "⊨", hl = "TSBoolean"},
+            Array = {icon = "", hl = "TSConstant"},
+            Object = {icon = "⦿", hl = "TSType"},
+            Key = {icon = "🔐", hl = "TSType"},
+            Null = {icon = "NULL", hl = "TSType"},
+            EnumMember = {icon = "", hl = "TSField"},
+            Struct = {icon = "𝓢", hl = "TSType"},
+            Event = {icon = "🗲", hl = "TSType"},
+            Operator = {icon = "+", hl = "TSOperator"},
+            TypeParameter = {icon = "𝙏", hl = "TSParameter"}
         }
       }
     end
@@ -231,6 +345,15 @@ return require('packer').startup(function(use)
   use {
     'nvim-telescope/telescope.nvim',
     require = 'nvim-lua/plenary.nvim',
+    config = function()
+      require('telescope').setup {
+        pickers = {
+          find_files = {
+            theme = "dropdown",
+          }
+        },
+      }
+    end
   }
 
   -- Git integrations
@@ -337,8 +460,8 @@ return require('packer').startup(function(use)
     requires = "kyazdani42/nvim-web-devicons",
     config = function()
       require("trouble").setup({
-        auto_open = true,
-        auto_close = true,
+        auto_open = false,
+        auto_close = false,
         auto_preview = false,
         auto_fold = true,
         signs = {
